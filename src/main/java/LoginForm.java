@@ -1,4 +1,9 @@
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginForm extends javax.swing.JPanel {
 private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LoginForm.class.getName());
@@ -7,25 +12,23 @@ private static final java.util.logging.Logger logger = java.util.logging.Logger.
      * Creates new form LoginForm
      */
     public LoginForm() {
-        initComponents();
+        initComponents(); 
+
          // Panel background color
         this.setBackground(new java.awt.Color(135, 206, 235));  // Lavender
         // Label font and color (for all your JLabel objects)
-loginLabel.setForeground(new java.awt.Color(102, 51, 153));
-usernameLabel.setForeground(new java.awt.Color(102, 51, 153));
-passwordLabel.setForeground(new java.awt.Color(102, 51, 153));
+loginLabel.setForeground(new java.awt.Color(0, 0, 153));
+usernameLabel.setForeground(new java.awt.Color(0, 0, 153));
+passwordLabel.setForeground(new java.awt.Color(0, 0, 153));
 
-// TextField background and text color
-    usernameField.setBackground(new java.awt.Color(245, 240, 255));
-    usernameField.setForeground(new java.awt.Color(51, 0, 102));
-    usernameField.setText("");
-
-    passwordField.setBackground(new java.awt.Color(245, 240, 255));
-    passwordField.setForeground(new java.awt.Color(51, 0, 102));
-    passwordField.setText("");
-
+// TextField & PasswordField background
+usernameField.setBackground(new java.awt.Color(242, 242, 242));
+passwordField.setBackground(new java.awt.Color(242, 242, 242));
+// Set text color too
+usernameField.setForeground(new java.awt.Color(51, 0, 102));
+passwordField.setForeground(new java.awt.Color(51, 0, 102));
 // Button background & text
-loginButton.setBackground(new java.awt.Color(153, 102, 204));
+loginButton.setBackground(new java.awt.Color(0, 0, 153));
 loginButton.setForeground(new java.awt.Color(255, 255, 255)); // white text
     }
     /**
@@ -113,43 +116,44 @@ loginButton.setForeground(new java.awt.Color(255, 255, 255)); // white text
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
        String username = usernameField.getText();
     String password = new String(passwordField.getPassword());
+ Connection conn = DatabaseConnection.getConnection();
 
-    if (username.equals("mainflow") && password.equals("mainflow123")) {
-        JOptionPane.showMessageDialog(this, "Login Successful!");
-    } else {
-        JOptionPane.showMessageDialog(this, "Oops! Invalid credentials");
+    try {
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setString(1, username);
+        pst.setString(2, password);
+        ResultSet rs = pst.executeQuery();
+
+    if (rs.next()) {
+            
+            JOptionPane.showMessageDialog(this, "Login Successful! 💜");
+            
+ // Open Homepage
+            new HomePage().setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Oops! Invalid credentials 😔");
+        }
+
+        conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
     }
     }//GEN-LAST:event_loginButtonActionPerformed
 /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-try{
-    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
- } catch (Exception ex) {
-    logger.log(java.util.logging.Level.SEVERE, null, ex);
+   public static void main(String args[]) {
+    java.awt.EventQueue.invokeLater(() -> {
+        javax.swing.JFrame frame = new javax.swing.JFrame("Login");
+        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+        frame.setContentPane(new LoginForm());
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    });
 }
-    
- // Create JFrame and add the LoginForm panel to it
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("User Login");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 350);
-            frame.setLocationRelativeTo(null);
-            frame.setResizable(false);
-            frame.setContentPane(new LoginForm());
-            frame.setVisible(true);
-        });
-    }
-        //</editor-fold>
-
-        /* Create and display the form */
-      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel loginLabel;
