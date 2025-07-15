@@ -8,3 +8,7 @@ A Java-based login and homepage system with integrated product and buyer managem
 - Connected to MySQL via JDBC
 
 Technologies: Java Swing • JDBC • MySQL • NetBeans IDE
+
+# QuickKart
+QuickKart is your online convenience store for all-time favorites—chips, chocolates, cold drinks, and more. With a fast, easy-to-use website, getting your cravings delivered has never been simpler.
+
