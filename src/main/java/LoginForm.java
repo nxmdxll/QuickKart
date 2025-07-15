@@ -130,7 +130,10 @@ loginButton.setForeground(new java.awt.Color(255, 255, 255)); // white text
             JOptionPane.showMessageDialog(this, "Login Successful! 💜");
             
  // Open Homepage
+
+
             new HomePage().setVisible(true);
+            
         } else {
             JOptionPane.showMessageDialog(this, "Oops! Invalid credentials 😔");
         }
